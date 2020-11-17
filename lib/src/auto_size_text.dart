@@ -31,6 +31,7 @@ class AutoSizeText extends StatefulWidget {
     this.textScaleFactor,
     this.maxLines,
     this.semanticsLabel,
+    this.selectable = false,
   })  : assert(data != null,
             'A non-null String must be provided to a AutoSizeText widget.'),
         textSpan = null,
@@ -58,6 +59,7 @@ class AutoSizeText extends StatefulWidget {
     this.textScaleFactor,
     this.maxLines,
     this.semanticsLabel,
+    this.selectable = false,
   })  : assert(textSpan != null,
             'A non-null TextSpan must be provided to a AutoSizeText.rich widget.'),
         data = null,
@@ -215,6 +217,12 @@ class AutoSizeText extends StatefulWidget {
   /// Text(r'$$', semanticsLabel: 'Double dollars')
   /// ```
   final String semanticsLabel;
+
+  /// Whether the text should be selectable.
+  ///
+  /// If false, it will build Text widget and
+  /// if true, it will build a SelectableText widget.
+  final bool selectable;
 
   @override
   _AutoSizeTextState createState() => _AutoSizeTextState();
@@ -412,35 +420,61 @@ class _AutoSizeTextState extends State<AutoSizeText> {
 
   Widget _buildText(double fontSize, TextStyle style, int maxLines) {
     if (widget.data != null) {
-      return Text(
-        widget.data,
-        key: widget.textKey,
-        style: style.copyWith(fontSize: fontSize),
-        strutStyle: widget.strutStyle,
-        textAlign: widget.textAlign,
-        textDirection: widget.textDirection,
-        locale: widget.locale,
-        softWrap: widget.softWrap,
-        overflow: widget.overflow,
-        textScaleFactor: 1,
-        maxLines: maxLines,
-        semanticsLabel: widget.semanticsLabel,
-      );
+      if (widget.selectable) {
+        return SelectableText(
+          widget.data,
+          key: widget.textKey,
+          style: style.copyWith(fontSize: fontSize),
+          strutStyle: widget.strutStyle,
+          textAlign: widget.textAlign,
+          textDirection: widget.textDirection,
+          textScaleFactor: 1,
+          maxLines: maxLines,
+        );
+      } else {
+        return Text(
+          widget.data,
+          key: widget.textKey,
+          style: style.copyWith(fontSize: fontSize),
+          strutStyle: widget.strutStyle,
+          textAlign: widget.textAlign,
+          textDirection: widget.textDirection,
+          locale: widget.locale,
+          softWrap: widget.softWrap,
+          overflow: widget.overflow,
+          textScaleFactor: 1,
+          maxLines: maxLines,
+          semanticsLabel: widget.semanticsLabel,
+        );
+      }
     } else {
-      return Text.rich(
-        widget.textSpan,
-        key: widget.textKey,
-        style: style,
-        strutStyle: widget.strutStyle,
-        textAlign: widget.textAlign,
-        textDirection: widget.textDirection,
-        locale: widget.locale,
-        softWrap: widget.softWrap,
-        overflow: widget.overflow,
-        textScaleFactor: fontSize / style.fontSize,
-        maxLines: maxLines,
-        semanticsLabel: widget.semanticsLabel,
-      );
+      if (widget.selectable) {
+        return SelectableText.rich(
+          widget.textSpan,
+          key: widget.textKey,
+          style: style,
+          strutStyle: widget.strutStyle,
+          textAlign: widget.textAlign,
+          textDirection: widget.textDirection,
+          textScaleFactor: fontSize / style.fontSize,
+          maxLines: maxLines,
+        );
+      } else {
+        return Text.rich(
+          widget.textSpan,
+          key: widget.textKey,
+          style: style,
+          strutStyle: widget.strutStyle,
+          textAlign: widget.textAlign,
+          textDirection: widget.textDirection,
+          locale: widget.locale,
+          softWrap: widget.softWrap,
+          overflow: widget.overflow,
+          textScaleFactor: fontSize / style.fontSize,
+          maxLines: maxLines,
+          semanticsLabel: widget.semanticsLabel,
+        );
+      }
     }
   }
 
