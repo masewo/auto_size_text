@@ -456,7 +456,7 @@ class _AutoSizeTextState extends State<AutoSizeText> {
           strutStyle: widget.strutStyle,
           textAlign: widget.textAlign,
           textDirection: widget.textDirection,
-          textScaleFactor: fontSize / style.fontSize,
+          textScaleFactor: fontSize / style.fontSize!,
           maxLines: maxLines,
         );
       } else {
